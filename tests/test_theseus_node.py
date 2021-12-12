@@ -57,18 +57,18 @@ def test_load_single_line_data():
 
 def test_ratio_001_narrow_specific():
     ratio = 0.01
-    assert node_spam.create_profile(node_ham, ratio=ratio)[:5] == ['free', 'rates', 'home', '&', 'systemworks']
-    assert node_ham.create_profile(node_spam, ratio=ratio)[:5] == ['[satalk]', '(was', '[ilug]', 'bliss', 'selling']
+    assert ['rates', 'systemworks', 'money', 'clearance', 'per'] == node_spam.create_profile(node_ham, ratio=ratio)[:5]
+    assert ['[satalk]', '(was', '[ilug]', 'bliss', 'selling']    == node_ham.create_profile(node_spam, ratio=ratio)[:5]
 
 def test_ratio_010_wider_but_still_distinct():
     ratio = 0.1
-    assert node_spam.create_profile(node_ham, ratio=ratio)[:5] == ['your', 'free', 'rates', 'home', '&']
-    assert node_ham.create_profile(node_spam, ratio=ratio)[:5] == ['[satalk]', '(was', '[ilug]', 'bliss', 'selling']
+    assert ['your', 'rates', 'home', 'systemworks', 'money']  == node_spam.create_profile(node_ham, ratio=ratio)[:5]
+    assert ['[satalk]', '(was', '[ilug]', 'bliss', 'selling'] == node_ham.create_profile(node_spam, ratio=ratio)[:5]
 
 def test_ratio_035_distinct_but_pronouns_bleeding_in():
     ratio = 0.35
-    assert node_spam.create_profile(node_ham, ratio=ratio)[:5] == ['your', 'you', '-', 'free', 'at']
-    assert node_ham.create_profile(node_spam, ratio=ratio)[:5] == ['re:', '[satalk]', 'new', '(was', '[ilug]']
+    assert ['your', 'you', 'free', 'at', 'rates']       == node_spam.create_profile(node_ham, ratio=ratio)[:5]
+    assert ['re:', '[satalk]', 'new', '(was', '[ilug]'] == node_ham.create_profile(node_spam, ratio=ratio)[:5]
 
 def test_ratio_001_semantic_meaning_lost_all_pronouns():
     ratio = 1.5
@@ -90,16 +90,16 @@ def test_predict():
     node_spam.depth = 100
     # spam node versus ham node, looking at spam sentences
     tests = [ # number of required for a 'hit' ->
-        [0.2, [498, 309, 164, 82, 42, 19, 3, 1, 1, 1, 1, 0]],
-        [0.3, [498, 312, 169, 84, 45, 19, 7, 1, 1, 1, 1, 1]],
-        [0.4, [498, 326, 188, 103, 49, 23, 7, 1, 1, 1, 1, 1]],
-        [0.5, [498, 326, 188, 103, 49, 23, 7, 1, 1, 1, 1, 1]],
-        [0.6, [498, 332, 196, 106, 52, 24, 8, 1, 1, 1, 1, 1]],
-        [0.7, [498, 351, 205, 121, 58, 27, 8, 1, 1, 1, 1, 1]],
-        [0.8, [498, 356, 216, 128, 68, 29, 9, 1, 1, 1, 1, 1]],
-        [0.9, [498, 357, 222, 129, 72, 29, 9, 1, 1, 1, 1, 1]],
-        [1.0, [498, 380, 250, 157, 87, 31, 15, 4, 1, 1, 1, 1]],
-        [1.1, [498, 382, 256, 159, 92, 33, 15, 4, 1, 1, 1, 1]],
+        [0.2, [498, 281, 130, 63, 34, 11, 3, 1, 0, 0, 0, 0]],
+        [0.3, [498, 289, 142, 73, 37, 14, 3, 1, 1, 1, 0, 0]],
+        [0.4, [498, 318, 179, 99, 48, 22, 7, 1, 1, 1, 1, 1]],
+        [0.5, [498, 318, 179, 99, 48, 22, 7, 1, 1, 1, 1, 1]],
+        [0.6, [498, 326, 184, 103, 48, 23, 7, 1, 1, 1, 1, 1]],
+        [0.7, [498, 338, 193, 110, 50, 26, 8, 1, 1, 1, 1, 1]],
+        [0.8, [498, 351, 203, 118, 57, 26, 8, 1, 1, 1, 1, 1]],
+        [0.9, [498, 356, 215, 128, 68, 28, 9, 1, 1, 1, 1, 1]],
+        [1.0, [498, 365, 222, 141, 72, 30, 11, 3, 1, 1, 1, 1]],
+        [1.1, [498, 380, 250, 157, 87, 31, 15, 4, 1, 1, 1, 1]],
     ]
     for ratio, hit_list in tests:
         node_spam.create_profile(node_ham, ratio=ratio)
@@ -111,16 +111,16 @@ def test_predict():
 
     # spam node versis ham node, looking at ham sentences
     tests2 = [
-        [0.2, [3024, 292, 31, 3, 1, 0, 0, 0, 0, 0, 0, 0]],
-        [0.3, [3024, 316, 35, 3, 1, 0, 0, 0, 0, 0, 0, 0]],
-        [0.4, [3024, 411, 54, 6, 1, 0, 0, 0, 0, 0, 0, 0]],
-        [0.5, [3024, 411, 54, 6, 1, 0, 0, 0, 0, 0, 0, 0]],
-        [0.6, [3024, 483, 77, 9, 1, 0, 0, 0, 0, 0, 0, 0]],
-        [0.7, [3024, 784, 145, 15, 3, 0, 0, 0, 0, 0, 0, 0]],
-        [0.8, [3024, 865, 215, 31, 3, 1, 0, 0, 0, 0, 0, 0]],
-        [0.9, [3024, 903, 241, 37, 5, 1, 0, 0, 0, 0, 0, 0]],
-        [1.0, [3024, 1241, 510, 131, 29, 6, 3, 0, 0, 0, 0, 0]],
-        [1.1, [3024, 1304, 531, 141, 33, 9, 3, 0, 0, 0, 0, 0]],
+        [0.2, [3024, 129, 11, 1, 1, 0, 0, 0, 0, 0, 0, 0]],
+        [0.3, [3024, 172, 15, 1, 1, 0, 0, 0, 0, 0, 0, 0]],
+        [0.4, [3024, 356, 41, 6, 1, 0, 0, 0, 0, 0, 0, 0]],
+        [0.5, [3024, 356, 41, 6, 1, 0, 0, 0, 0, 0, 0, 0]],
+        [0.6, [3024, 394, 53, 6, 1, 0, 0, 0, 0, 0, 0, 0]],
+        [0.7, [3024, 613, 86, 7, 1, 0, 0, 0, 0, 0, 0, 0]],
+        [0.8, [3024, 746, 136, 11, 3, 0, 0, 0, 0, 0, 0, 0]],
+        [0.9, [3024, 848, 205, 28, 3, 1, 0, 0, 0, 0, 0, 0]],
+        [1.0, [3024, 972, 296, 38, 8, 2, 1, 0, 0, 0, 0, 0]],
+        [1.1, [3024, 1241, 510, 131, 29, 6, 3, 0, 0, 0, 0, 0]],
     ]
     for ratio, hit_list in tests2:
         node_spam.create_profile(node_ham, ratio=ratio)
